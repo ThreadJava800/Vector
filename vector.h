@@ -12,22 +12,6 @@ const float     UNIT_POINT_RAD         = 4;
 const sf::Color DEFAULT_LINE_COLOR     = sf::Color::White;
 const sf::Color DEFAULT_UNIT_POINT_COL = sf::Color::Red;
 
-class Vector {
-private:
-    double    x, y;
-    sf::Color color;
-
-public:
-    Vector();
-    Vector(double x, double y, sf::Color color);
-
-    double    getX();
-    double    getY();
-    sf::Color getColor();
-
-    void draw(sf::RenderWindow* window, double xEnd, double yEnd);
-};
-
 class CoordinatePlane {
 private:
     double    xOrigin, yOrigin;
@@ -43,6 +27,25 @@ public:
     double getYUnit  ();
 
     void draw(sf::RenderWindow* window);
+};
+
+class Vector {
+private:
+    double    x, y;
+    sf::Color color;
+
+public:
+    Vector();
+    Vector(double x, double y);
+    Vector(double x, double y, sf::Color color);
+
+    double    getX();
+    double    getY();
+    sf::Color getColor();
+
+    void draw(sf::RenderWindow* window, CoordinatePlane* coordPlane);
+
+    Vector operator+(Vector const& toSum);
 };
 
 #if _DEBUG
