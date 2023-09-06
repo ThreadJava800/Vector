@@ -4,13 +4,22 @@ Shape::Shape(double x, double y, SHAPE_TYPE type) :
         x(x), y(y), type(type) {}
 
 Vector::Vector(double x, double y) : Shape(x, y, LINE) {
-    this->x = x;
-    this->y = y;
+    this->x    = x;
+    this->y    = y;
+    this->xEnd = 0;
+    this->yEnd = 0;
 }
 
-// Vector* Vector::add(Vector a, Vector b) {
-//     return new Vector(a.x + b.x, a.y + b.y);
-// }
+Vector::Vector(double x, double y, double xEnd, double yEnd) : Shape(x, y, LINE) {
+    this->x    = x;
+    this->y    = y;
+    this->xEnd = xEnd;
+    this->yEnd = yEnd;
+}
+
+Vector* Vector::add(Vector* a, Vector* b) {
+    return new Vector(a->x + b->x, a->y + b->y);
+}
 
 void Vector::drawShape(sf::RenderWindow* window) {
     if (!window) return;
@@ -63,20 +72,9 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_HEIGHT, WINDOW_LENGTH), "");
     window.setPosition(sf::Vector2i(0, 0));
 
-    sf::VertexArray vectorLine(sf::LinesStrip, 2);
-    sf::VertexArray coordAxisY(sf::LinesStrip, 2);
-    sf::VertexArray coordAxisX(sf::LinesStrip, 2);
+    Vector* vec = new Vector(X_CENTER, Y_CENTER, 20, 20);
+    CoordinatePlane* plane = new CoordinatePlane(X_CENTER, Y_CENTER, 1);
 
-    sf::Vector2i coordinateCenter(X_CENTER, Y_CENTER);
-
-    // set up coordinate axis
-    coordAxisY[0].position = sf::Vector2f(X_CENTER, WINDOW_HEIGHT);
-    coordAxisY[1].position = sf::Vector2f(X_CENTER, 0);
-
-    coordAxisX[0].position = sf::Vector2f(0, Y_CENTER);
-    coordAxisX[1].position = sf::Vector2f(WINDOW_LENGTH, Y_CENTER);
-
-    // Vector* vec = new Vector(0, 0);
     while (window.isOpen())
     {
         sf::Event event;

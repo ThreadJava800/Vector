@@ -32,8 +32,9 @@ private:
 
 public:   
     Vector(double x, double y);
+    Vector(double x, double y, double xEnd, double yEnd);
 
-    Vector* add(Vector a, Vector b);
+    Vector* add(Vector* a, Vector* b);
     void drawShape(sf::RenderWindow* window) override;
 };
 
@@ -48,6 +49,8 @@ private:
 public:
     CoordinatePlane(double x, double y, double singleSegment);
     CoordinatePlane(double x, double y, double singleSegment, Shape** shapes, size_t shapeCount);
+
+    ~CoordinatePlane();
 
     void drawAxis(sf::RenderWindow* window, int windowHeight, int windowLength);
     void drawAll (sf::RenderWindow* window, int windowHeight, int windowLength);
