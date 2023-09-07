@@ -42,9 +42,24 @@ void Vector::rotate(double degree) {
     this->y = degCos * oldY + degSin * oldX;
 }
 
-inline sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y) {
+sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y) {
     return sf::Vector2f(WINDOW_LENGTH / 2 + x * coordPlane.getXUnit(),
                         WINDOW_HEIGHT / 2 - y * coordPlane.getYUnit());
+}
+
+sf::Vector2f vecGraphToCoord(CoordinatePlane& coordPlane, double x, double y) {
+    return sf::Vector2f((x - WINDOW_LENGTH / 2) / coordPlane.getXUnit(), 
+                        (WINDOW_HEIGHT / 2 - y) / coordPlane.getYUnit());
+}
+
+void Vector::setX(double x) {
+    if (x != NAN) this->x = x;
+    else std::cerr << "Value was NAN\n";
+}
+
+void Vector::setY(double y) {
+    if (y != NAN) this->y = y;
+    else std::cerr << "Value was NAN\n";
 }
 
 void Vector::setColor(sf::Color color) {
@@ -94,9 +109,17 @@ Vector operator+(const Vector& a, const Vector& b) {
     return Vector(a.x + b.x, a.y + b.y, resColor);
 }
 
+void operator+= (Vector& a, const Vector& b) {
+    a = a + b;
+}
+
 Vector operator-(const Vector& a, const Vector& b) {
     sf::Color resColor = (a.color == b.color) ? a.color : DEFAULT_LINE_COLOR;
     return Vector(a.x - b.x, a.y - b.y, resColor);
+}
+
+void operator-= (Vector& a, const Vector& b) {
+    a = a - b;
 }
 
 Vector operator-(const Vector& a) {
@@ -105,6 +128,60 @@ Vector operator-(const Vector& a) {
 
 Vector operator*(const Vector& a, double scalar) {
     return Vector(scalar * a.x, scalar * a.y, a.color);
+}
+
+Vector operator*(double scalar, const Vector& a) {
+    return Vector(scalar * a.x, scalar * a.y, a.color);
+}
+
+void operator*= (Vector& a, double scalar) {
+    a = a * scalar;
+}
+
+Vector operator/ (const Vector& a, double scalar) {
+    return Vector(a.x / scalar, a.y / scalar, a.color);
+}
+
+void operator/= (Vector& a, double scalar) {
+    a = a / scalar;
+}
+
+// projection on ox
+Vector operator&(const Vector& a) {
+    return Vector(a.x, 0, a.color);
+}
+
+// projection on oy
+Vector operator~(const Vector& a) {
+    return Vector(0, a.y, a.color);
+}
+
+Vector operator>> (const Vector& a, double scalar) {
+    Vector result = a;
+    result >>= scalar;
+    return result;
+}
+
+Vector operator<< (const Vector& a, double scalar) {
+    Vector result = a;
+    result <<= scalar;
+    return result;
+}
+
+void operator>>=(Vector& a, double scalar) {
+    a.rotate(-1 * scalar);
+}
+
+void operator<<=(Vector& a, double scalar) {
+    a.rotate(scalar);
+}
+
+bool operator==(const Vector& a, const Vector& b) {
+    return (a.x == b.x) && (a.y == b.y);
+}
+
+bool operator!=(const Vector& a, const Vector& b) {
+    return (a.x != b.x) || (a.y != b.y);
 }
 
 // normal vector
