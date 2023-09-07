@@ -42,6 +42,7 @@ void CoordinatePlane::draw(sf::RenderWindow* window) {
     // unit points on x axis
     for (int i = WINDOW_LENGTH / 2; i >= 0; i -= xUnit) {
         sf::RectangleShape point(sf::Vector2f(UNIT_POINT_RAD, UNIT_POINT_RAD));
+        
         point.setPosition(sf::Vector2f(i - UNIT_POINT_RAD / 2, (WINDOW_HEIGHT - UNIT_POINT_RAD) / 2));
         point.setFillColor(DEFAULT_UNIT_POINT_COL);
 
@@ -49,6 +50,7 @@ void CoordinatePlane::draw(sf::RenderWindow* window) {
     }
     for (int i = WINDOW_LENGTH / 2; i <= WINDOW_LENGTH; i += xUnit) {
         sf::RectangleShape point(sf::Vector2f(UNIT_POINT_RAD, UNIT_POINT_RAD));
+
         point.setPosition(sf::Vector2f(i - UNIT_POINT_RAD / 2, (WINDOW_HEIGHT - UNIT_POINT_RAD) / 2));
         point.setFillColor(DEFAULT_UNIT_POINT_COL);
 
@@ -57,6 +59,7 @@ void CoordinatePlane::draw(sf::RenderWindow* window) {
 
     for (int i = WINDOW_HEIGHT / 2; i >= 0; i -= yUnit) {
         sf::RectangleShape point(sf::Vector2f(UNIT_POINT_RAD, UNIT_POINT_RAD));
+
         point.setPosition(sf::Vector2f((WINDOW_LENGTH - UNIT_POINT_RAD) / 2, i - UNIT_POINT_RAD / 2));
         point.setFillColor(DEFAULT_UNIT_POINT_COL);
 
@@ -64,6 +67,7 @@ void CoordinatePlane::draw(sf::RenderWindow* window) {
     }
     for (int i = WINDOW_HEIGHT / 2; i < WINDOW_HEIGHT; i += yUnit) {
         sf::RectangleShape point(sf::Vector2f(UNIT_POINT_RAD, UNIT_POINT_RAD));
+
         point.setPosition(sf::Vector2f((WINDOW_LENGTH - UNIT_POINT_RAD) / 2, i - UNIT_POINT_RAD / 2));
         point.setFillColor(DEFAULT_UNIT_POINT_COL);
 

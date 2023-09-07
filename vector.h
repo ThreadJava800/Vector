@@ -2,6 +2,7 @@
 #define _VEC_h_
 
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -34,6 +35,10 @@ private:
     double    x, y;
     sf::Color color;
 
+    void drawArrowheads(sf::RenderWindow* window, CoordinatePlane* coordPlane);
+    void drawLine      (sf::RenderWindow* window, CoordinatePlane* coordPlane,
+                        double xStart, double yStart);
+
 public:
     Vector();
     Vector(double x, double y);
@@ -43,9 +48,19 @@ public:
     double    getY();
     sf::Color getColor();
 
-    void draw(sf::RenderWindow* window, CoordinatePlane* coordPlane);
+    inline double len() const;
 
-    Vector operator+(Vector const& toSum);
+    void setColor(sf::Color color);
+
+    void draw(sf::RenderWindow* window, CoordinatePlane* coordPlane, 
+              double xStart = 0, double yStart = 0);
+
+    friend Vector operator+(const Vector& a, const Vector& b);
+    friend Vector operator-(const Vector& a, const Vector& b);
+    friend Vector operator-(const Vector& a);
+    friend Vector operator*(const Vector& a, double scalar);
+    friend Vector operator!(const Vector& a);                   // normal vector
+    friend double operator,(const Vector& a, const Vector& b);  // scalar mul
 };
 
 #if _DEBUG
