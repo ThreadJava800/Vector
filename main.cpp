@@ -6,14 +6,8 @@ int main() {
 
     CoordinatePlane coordPlane = CoordinatePlane();
 
-    Vector staticVec1 = Vector(1, -2);
-    Vector staticVec2 = Vector(1, 1);
-
-    Vector sumVec    = staticVec1 + staticVec2;
-    sumVec.setColor(sf::Color::Red);
-
-    Vector normalVec = Vector(2, 2, sf::Color::Blue);
-    normalVec.setColor(sf::Color::Blue);
+    double rotateDeg   = 1;
+    Vector rotatingVec = Vector(1, 0, sf::Color::Blue);
 
     while (window.isOpen())
     {
@@ -34,11 +28,10 @@ int main() {
 
         window.clear();
 
-        coordPlane.draw(&window);
-        // staticVec1.draw(&window, &coordPlane);
-        // staticVec2.draw(&window, &coordPlane);
-        // sumVec.draw(&window, &coordPlane);
-        normalVec.draw(&window, &coordPlane);
+        coordPlane.draw(window);
+        
+        rotatingVec.rotate(0.01);
+        rotatingVec.draw(window, coordPlane);
 
         window.display();
     }

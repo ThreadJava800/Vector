@@ -31,12 +31,28 @@ inline double Vector::len() const {
     return sqrt(this->x * this->x + this->y * this->y);
 }
 
+void Vector::rotate(double degree) {
+    double radians = degree * M_PI / 180;
+
+    double oldX   = this->x,      oldY   = this->y;
+    double degCos = cos(radians), degSin = sin(radians);
+
+    // (sin(a) + cos(a)i)*(x+yi) = (sin(a)*x - cos(a)*y)+(sin(a)*y + cos(a)*x)i
+    this->x = degCos * oldX - degSin * oldY;
+    this->y = degCos * oldY + degSin * oldX;
+}
+
+inline sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y) {
+    return sf::Vector2f(WINDOW_LENGTH / 2 + x * coordPlane.getXUnit(),
+                        WINDOW_HEIGHT / 2 - y * coordPlane.getYUnit());
+}
+
 void Vector::setColor(sf::Color color) {
     this->color = color;
 }
 
-void Vector::drawArrowheads(sf::RenderWindow* window, CoordinatePlane* coordPlane) {
-    ON_ERROR(!window || !coordPlane, "Null pointer exception",);
+void Vector::drawArrowheads(sf::RenderWindow& window, CoordinatePlane& coordPlane) {
+    sf::VertexArray vecHead = sf::VertexArray(sf::Triangles, 3);
 
     // question
     Vector leftArrow = !(*this) * 0.1 - (*this) * 0.1;  // TODO: move to constants
@@ -45,39 +61,42 @@ void Vector::drawArrowheads(sf::RenderWindow* window, CoordinatePlane* coordPlan
     Vector rightArrow = !(*this) * -0.1 - (*this) * 0.1;  // TODO: move to constants
     rightArrow = rightArrow + Vector(this->x, this->y);
 
-    leftArrow.setColor(sf::Color::Red);
-    rightArrow.setColor(sf::Color::Red);
-    leftArrow.drawLine(window, coordPlane, this->x, this->y);
-    rightArrow.drawLine(window, coordPlane, this->x, this->y);
+    vecHead[0].position = vecCoordToGraph(coordPlane, leftArrow.x, leftArrow.y);
+    vecHead[1].position = vecCoordToGraph(coordPlane, rightArrow.x, rightArrow.y);
+    vecHead[2].position = vecCoordToGraph(coordPlane, this->x, this->y);
+
+    vecHead[0].color    = this->color;
+    vecHead[1].color    = this->color;
+    vecHead[2].color    = this->color;
+
+    window.draw(vecHead);
 }
 
-void Vector::drawLine(sf::RenderWindow* window, CoordinatePlane* coordPlane, double xStart, double yStart) {
-    ON_ERROR(!window || !coordPlane, "Null pointer exception",);
-
+void Vector::drawLine(sf::RenderWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
     sf::VertexArray lineObject(sf::LinesStrip, 2);
 
-    lineObject[0].position = sf::Vector2f(WINDOW_LENGTH / 2 + xStart * coordPlane->getXUnit(), 
-                                          WINDOW_HEIGHT / 2 - yStart * coordPlane->getYUnit());
-    lineObject[1].position = sf::Vector2f(WINDOW_LENGTH / 2 + this->x * coordPlane->getXUnit(), 
-                                          WINDOW_HEIGHT / 2 - this->y * coordPlane->getYUnit());
+    lineObject[0].position = vecCoordToGraph(coordPlane, xStart, yStart);
+    lineObject[1].position = vecCoordToGraph(coordPlane, this->x, this->y);;
 
     lineObject[0].color = this->color;
     lineObject[1].color = this->color;
 
-    window->draw(lineObject);
+    window.draw(lineObject);
 }
 
-void Vector::draw(sf::RenderWindow* window, CoordinatePlane* coordPlane, double xStart, double yStart) {
+void Vector::draw(sf::RenderWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
     drawLine(window, coordPlane, xStart, yStart);
     drawArrowheads(window, coordPlane);
 }
 
 Vector operator+(const Vector& a, const Vector& b) {
-    return Vector(a.x + b.x, a.y + b.y);
+    sf::Color resColor = (a.color == b.color) ? a.color : DEFAULT_LINE_COLOR;
+    return Vector(a.x + b.x, a.y + b.y, resColor);
 }
 
 Vector operator-(const Vector& a, const Vector& b) {
-    return Vector(a.x - b.x, a.y - b.y);
+    sf::Color resColor = (a.color == b.color) ? a.color : DEFAULT_LINE_COLOR;
+    return Vector(a.x - b.x, a.y - b.y, resColor);
 }
 
 Vector operator-(const Vector& a) {

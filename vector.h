@@ -1,6 +1,7 @@
 #ifndef _VEC_h_
 #define _VEC_h_
 
+#include <unistd.h>
 #include <iostream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
@@ -27,7 +28,7 @@ public:
     double getXUnit  ();
     double getYUnit  ();
 
-    void draw(sf::RenderWindow* window);
+    void draw(sf::RenderWindow& window);
 };
 
 class Vector {
@@ -35,8 +36,8 @@ private:
     double    x, y;
     sf::Color color;
 
-    void drawArrowheads(sf::RenderWindow* window, CoordinatePlane* coordPlane);
-    void drawLine      (sf::RenderWindow* window, CoordinatePlane* coordPlane,
+    void drawArrowheads(sf::RenderWindow& window, CoordinatePlane& coordPlane);
+    void drawLine      (sf::RenderWindow& window, CoordinatePlane& coordPlane,
                         double xStart, double yStart);
 
 public:
@@ -48,11 +49,12 @@ public:
     double    getY();
     sf::Color getColor();
 
-    inline double len() const;
-
     void setColor(sf::Color color);
 
-    void draw(sf::RenderWindow* window, CoordinatePlane* coordPlane, 
+    inline double len() const;
+
+    void rotate(double degree);  // not radians
+    void draw(sf::RenderWindow& window, CoordinatePlane& coordPlane, 
               double xStart = 0, double yStart = 0);
 
     friend Vector operator+(const Vector& a, const Vector& b);
@@ -63,17 +65,6 @@ public:
     friend double operator,(const Vector& a, const Vector& b);  // scalar mul
 };
 
-#if _DEBUG
-#define ON_ERROR(expr, errStr, retVal) {                 \
-    if (expr) {                                           \
-        fprintf(stderr, "FATAL ERROR: %s\n", errStr);      \
-        return retVal;                                      \
-    }                                                        \
-}                                                             \
-
-
-#else
-#define ON_ERROR(expr, errStr, retVal) {}
-#endif
+inline sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y);
 
 #endif
