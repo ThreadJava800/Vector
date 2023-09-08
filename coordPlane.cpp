@@ -6,6 +6,13 @@ CoordinatePlane::CoordinatePlane(double xOrigin, double yOrigin, double xUnit, d
     xUnit  (xUnit),
     yUnit  (yUnit)              {}
 
+CoordinatePlane::~CoordinatePlane() {
+    this->xOrigin = NAN;
+    this->yOrigin = NAN;
+    this->xUnit   = NAN;
+    this->yUnit   = NAN;
+}
+
 double CoordinatePlane::getXOrigin() {
     return this->xOrigin;
 }
@@ -24,14 +31,16 @@ void CoordinatePlane::draw(SubWindow& window) {
 
     int unitPointCount = (len / this->xUnit) + (height / this->yUnit);
 
-    sf::VertexArray axis(sf::Lines, 2);
+    sf::Vector2f oxStart = vecGraphToCoord(window, *this, window.getX0(),   height / 2 + window.getY0());
+    sf::Vector2f oxEnd   = vecGraphToCoord(window, *this, len + window.getX0(), height / 2 + window.getY0());
+    Vector       ox      = Vector(oxEnd.x, oxEnd.y, sf::Color::White);
 
-    // x axis
-    axis.append(sf::Vertex(sf::Vector2f(0  , height / 2)));
-    axis.append(sf::Vertex(sf::Vector2f(len, height / 2)));
+    sf::Vector2f oyStart = vecGraphToCoord(window, *this, len / 2 + window.getX0(), height + window.getY0());
+    sf::Vector2f oyEnd   = vecGraphToCoord(window, *this, len / 2 + window.getX0(), window.getY0());
+    Vector       oy      = Vector(oyEnd.x, oyEnd.y, sf::Color::White);
 
-    axis.append(sf::Vertex(sf::Vector2f(len / 2, 0)));
-    axis.append(sf::Vertex(sf::Vector2f(len / 2, height)));
+    ox.draw(window, *this, oxStart.x, oxStart.y);
+    oy.draw(window, *this, oyStart.x, oyStart.y);
 
     // unit points on x axis
     for (int i = len / 2; i >= 0; i -= xUnit) {
@@ -51,6 +60,7 @@ void CoordinatePlane::draw(SubWindow& window) {
         window.draw(point);
     }
 
+    // unit points on y axis
     for (int i = height / 2; i >= 0; i -= yUnit) {
         sf::RectangleShape point(sf::Vector2f(UNIT_POINT_RAD, UNIT_POINT_RAD));
 
@@ -67,6 +77,4 @@ void CoordinatePlane::draw(SubWindow& window) {
 
         window.draw(point);
     }
-
-    window.draw(axis);
 }

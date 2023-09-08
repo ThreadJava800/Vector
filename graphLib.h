@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-const float     UNIT_POINT_RAD         = 4;
+const float     UNIT_POINT_RAD         = 8;
 const double    ARROW_SIZE_COEF        = 0.1;
 const sf::Color DEFAULT_LINE_COLOR     = sf::Color::White;
 const sf::Color DEFAULT_UNIT_POINT_COL = sf::Color::Red;
@@ -18,6 +18,7 @@ private:
 
 public:
     SubWindow(double x0, double y0, double sizeX, double sizeY);
+    ~SubWindow();
 
     double getX0();
     double getY0();
@@ -32,6 +33,7 @@ private:
 
 public:
     CoordinatePlane(double xOrigin, double yOrigin, double xUnit, double yUnit);
+    ~CoordinatePlane();
 
     double getXOrigin();
     double getYOrigin();
@@ -55,6 +57,8 @@ public:
     Vector();
     Vector(double x, double y);
     Vector(double x, double y, sf::Color color);
+
+    ~Vector();
 
     double    getX();
     double    getY();

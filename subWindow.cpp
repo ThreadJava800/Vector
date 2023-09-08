@@ -1,12 +1,15 @@
 #include "graphLib.h"
 
-SubWindow::SubWindow(double x0, double y0, double sizeX, double sizeY) :
-    sf::RenderTexture()
-    {
-        this->x0 = x0;
-        this->y0 = y0;
-        this->create(sizeX, sizeY);
-    }
+SubWindow::SubWindow(double x0, double y0, double sizeX, double sizeY) : sf::RenderTexture() {
+    this->x0 = x0;
+    this->y0 = y0;
+    this->create(sizeX, sizeY);
+}
+
+SubWindow::~SubWindow() {
+    this->x0 = NAN;
+    this->y0 = NAN;
+}
 
 double SubWindow::getX0() {
     return this->x0;

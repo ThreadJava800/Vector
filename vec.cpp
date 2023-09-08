@@ -15,6 +15,12 @@ Vector::Vector(double x, double y, sf::Color color) :
     y    (y),
     color(color)              {}
 
+Vector::~Vector() {
+    this->x = NAN;
+    this->y = NAN;
+    this->color = DEFAULT_LINE_COLOR;
+}
+
 double Vector::getX() {
     return this->x;
 }
@@ -48,7 +54,6 @@ sf::Vector2f vecCoordToGraph(SubWindow& subWindow, CoordinatePlane& coordPlane, 
 }
 
 sf::Vector2f vecGraphToCoord(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
-    std::cout << subWindow.getX0() << ' ' << subWindow.getY0() << '\n';
     return sf::Vector2f((x - subWindow.getSize().x / 2 - subWindow.getX0()) / coordPlane.getXUnit(), 
                         (subWindow.getSize().y / 2 - y + subWindow.getY0()) / coordPlane.getYUnit());
 }
