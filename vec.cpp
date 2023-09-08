@@ -49,13 +49,13 @@ void Vector::rotate(double degree) {
 }
 
 sf::Vector2f vecCoordToGraph(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
-    return sf::Vector2f(subWindow.getSize().x / 2 + x * coordPlane.getXUnit(),
-                        subWindow.getSize().y / 2 - y * coordPlane.getYUnit());
+    return sf::Vector2f(coordPlane.getXOrigin() + x * coordPlane.getXUnit(),
+                        coordPlane.getYOrigin() - y * coordPlane.getYUnit());
 }
 
 sf::Vector2f vecGraphToCoord(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
-    return sf::Vector2f((x - subWindow.getSize().x / 2 - subWindow.getX0()) / coordPlane.getXUnit(), 
-                        (subWindow.getSize().y / 2 - y + subWindow.getY0()) / coordPlane.getYUnit());
+    return sf::Vector2f((x - coordPlane.getXOrigin() - subWindow.getX0()) / coordPlane.getXUnit(), 
+                        (coordPlane.getYOrigin() - y + subWindow.getY0()) / coordPlane.getYUnit());
 }
 
 void Vector::setX(double x) {
@@ -100,7 +100,7 @@ void Vector::drawLine(SubWindow& window, CoordinatePlane& coordPlane, double xSt
     sf::VertexArray lineObject(sf::LinesStrip, 2);
 
     lineObject[0].position = vecCoordToGraph(window, coordPlane, xStart, yStart);
-    lineObject[1].position = vecCoordToGraph(window, coordPlane, this->x, this->y);;
+    lineObject[1].position = vecCoordToGraph(window, coordPlane, this->x, this->y);
 
     lineObject[0].color = this->color;
     lineObject[1].color = this->color;

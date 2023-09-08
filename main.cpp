@@ -4,11 +4,11 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(), "Chemical simulator", sf::Style::Fullscreen);
     window.setPosition(sf::Vector2i(0, 0));
 
-    SubWindow subWindow1 = SubWindow(0, 0, 500, 500);
-    CoordinatePlane coordPlane1 = CoordinatePlane(0, 0, 50, 50);
+    SubWindow subWindow1 = SubWindow(40, 50, 500, 500);
+    CoordinatePlane coordPlane1 = CoordinatePlane(100, 100, 50, 50);
 
-    SubWindow subWindow2 = SubWindow(1000, 0, 920, 920);
-    CoordinatePlane coordPlane2 = CoordinatePlane(1000, 0, 100, 100);
+    SubWindow subWindow2 = SubWindow(500, 0, 920, 920);
+    CoordinatePlane coordPlane2 = CoordinatePlane(460, 300, 100, 100);
 
     Vector  rotatingVec = Vector(1, 2, sf::Color::Blue);
     Vector* mouseVec1   = nullptr;
