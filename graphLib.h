@@ -24,6 +24,7 @@ public:
     double getY0();
 
     void displayOnWindow(sf::RenderWindow& window);
+    bool pointInside(double x, double y);
 };
 
 class CoordinatePlane {

@@ -26,3 +26,8 @@ void SubWindow::displayOnWindow(sf::RenderWindow& window) {
     sprite.setPosition(this->x0, this->y0);
     window.draw(sprite);
 }
+
+bool SubWindow::pointInside(double x, double y) {
+    return (this->getX0() <= x && x <= this->getX0() + this->getSize().x) &&
+           (this->getY0() <= y && y <= this->getY0() + this->getSize().y);
+}

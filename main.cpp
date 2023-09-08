@@ -1,17 +1,18 @@
-#include "graphLib.h"
+#include "graphLib.h"        
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(), "Chemical simulator", sf::Style::Fullscreen);
     window.setPosition(sf::Vector2i(0, 0));
 
-    SubWindow subWindow = SubWindow(20, 20, 300, 300);
-    CoordinatePlane coordPlane = CoordinatePlane(150, 150, 50, 50);
+    SubWindow subWindow1 = SubWindow(0, 0, 500, 500);
+    CoordinatePlane coordPlane1 = CoordinatePlane(0, 0, 50, 50);
 
-    SubWindow subWindow2 = SubWindow(500, 500, 500, 500);
-    CoordinatePlane coordPlane2 = CoordinatePlane(500, 500, 100, 100);
+    SubWindow subWindow2 = SubWindow(1000, 0, 920, 920);
+    CoordinatePlane coordPlane2 = CoordinatePlane(1000, 0, 100, 100);
 
     Vector  rotatingVec = Vector(1, 2, sf::Color::Blue);
     Vector* mouseVec1   = nullptr;
+    Vector* mouseVec2   = nullptr;
 
     Vector test = Vector(1, 2, sf::Color::Yellow);
 
@@ -32,15 +33,26 @@ int main() {
                 break;
             case sf::Event::MouseButtonPressed: {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    if (mouseVec1) delete mouseVec1;
-
                     sf::Vector2i mouseGraphCoords = sf::Mouse::getPosition();
-                    sf::Vector2f mouseVecCoords   = vecGraphToCoord(subWindow2,
-                                                                    coordPlane2, 
-                                                                    mouseGraphCoords.x, 
-                                                                    mouseGraphCoords.y);
 
-                    mouseVec1 = new Vector(mouseVecCoords.x, mouseVecCoords.y, sf::Color::Cyan);
+                    if (subWindow1.pointInside(mouseGraphCoords.x, mouseGraphCoords.y)) {
+                        sf::Vector2f mouseVecCoords   = vecGraphToCoord(subWindow1,
+                                                                        coordPlane1, 
+                                                                        mouseGraphCoords.x, 
+                                                                        mouseGraphCoords.y);
+
+                        if (mouseVec1) delete mouseVec1;
+                        mouseVec1 = new Vector(mouseVecCoords.x, mouseVecCoords.y, sf::Color::Cyan);
+                    }
+                    if (subWindow2.pointInside(mouseGraphCoords.x, mouseGraphCoords.y)) {
+                        sf::Vector2f mouseVecCoords   = vecGraphToCoord(subWindow2,
+                                                                        coordPlane2, 
+                                                                        mouseGraphCoords.x, 
+                                                                        mouseGraphCoords.y);
+
+                        if (mouseVec2) delete mouseVec2;
+                        mouseVec2 = new Vector(mouseVecCoords.x, mouseVecCoords.y, sf::Color::Cyan);
+                    }
                 }
             }
             default:
@@ -50,16 +62,17 @@ int main() {
 
         window.clear();
 
-        subWindow.clear();
+        subWindow1.clear();
         subWindow2.clear();
-        coordPlane.draw(subWindow);
+        coordPlane1.draw(subWindow1);
         coordPlane2.draw(subWindow2);
         
         rotatingVec.rotate(0.01);
-        rotatingVec.draw(subWindow, coordPlane);
+        rotatingVec.draw(subWindow1, coordPlane1);
         rotatingVec.draw(subWindow2, coordPlane2);
 
-        if (mouseVec1) mouseVec1->draw(subWindow2, coordPlane2);
+        if (mouseVec1) mouseVec1->draw(subWindow1, coordPlane1);
+        if (mouseVec2) mouseVec2->draw(subWindow2, coordPlane2);
 
         test.draw(subWindow2, coordPlane2, -1, 0);
 
@@ -67,12 +80,14 @@ int main() {
         // staticVec2.draw(window, coordPlane);
         // result.draw(window, coordPlane);
 
-        subWindow.displayOnWindow(window);
+        subWindow1.displayOnWindow(window);
         subWindow2.displayOnWindow(window);
 
         window.display();
     }
 
     if (mouseVec1) delete mouseVec1;
+    if (mouseVec2) delete mouseVec2;
+
     return 0;
 }
