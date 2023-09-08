@@ -4,17 +4,20 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(), "Chemical simulator", sf::Style::Fullscreen);
     window.setPosition(sf::Vector2i(0, 0));
 
-    SubWindow subWindow1 = SubWindow(40, 50, 500, 500);
+    SubWindow subWindow1 = SubWindow(50, 50, 500, 500);
     CoordinatePlane coordPlane1 = CoordinatePlane(100, 100, 50, 50);
 
-    SubWindow subWindow2 = SubWindow(500, 0, 920, 920);
-    CoordinatePlane coordPlane2 = CoordinatePlane(460, 300, 100, 100);
+    SubWindow subWindow2 = SubWindow(1000, 0, 920, 920);
+    CoordinatePlane coordPlane2 = CoordinatePlane(460, 460, 100, 100);
 
     Vector  rotatingVec = Vector(1, 2, sf::Color::Blue);
     Vector* mouseVec1   = nullptr;
     Vector* mouseVec2   = nullptr;
 
-    Vector test = Vector(1, 2, sf::Color::Yellow);
+    Vector test1 = Vector(1, 2, sf::Color::Yellow);
+    Vector test2 = Vector(2, 1, sf::Color::Yellow);
+    // test2 += test1;
+    Vector test3 = test1 + test2;
 
     while (window.isOpen())
     {
@@ -74,7 +77,9 @@ int main() {
         if (mouseVec1) mouseVec1->draw(subWindow1, coordPlane1);
         if (mouseVec2) mouseVec2->draw(subWindow2, coordPlane2);
 
-        test.draw(subWindow2, coordPlane2, -1, 0);
+        test1.draw(subWindow2, coordPlane2, -1, 0);    
+        test2.draw(subWindow2, coordPlane2);
+        test3.draw(subWindow2, coordPlane2);
 
         // staticVec1.draw(window, coordPlane);
         // staticVec2.draw(window, coordPlane);

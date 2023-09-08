@@ -9,6 +9,7 @@
 
 const float     UNIT_POINT_RAD         = 8;
 const double    ARROW_SIZE_COEF        = 0.1;
+const int       FRAME_WIDTH            = 10;
 const sf::Color DEFAULT_LINE_COLOR     = sf::Color::White;
 const sf::Color DEFAULT_UNIT_POINT_COL = sf::Color::Red;
 
@@ -31,6 +32,9 @@ class CoordinatePlane {
 private:
     double    xOrigin, yOrigin;
     double    xUnit  , yUnit;
+
+    void drawPoints(SubWindow& window);
+    void drawFrame (SubWindow& window);
 
 public:
     CoordinatePlane(double xOrigin, double yOrigin, double xUnit, double yUnit);
