@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "graphLib.h"
 
 Vector::Vector() :
     x    (0),
@@ -42,14 +42,14 @@ void Vector::rotate(double degree) {
     this->y = degCos * oldY + degSin * oldX;
 }
 
-sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y) {
-    return sf::Vector2f(WINDOW_LENGTH / 2 + x * coordPlane.getXUnit(),
-                        WINDOW_HEIGHT / 2 - y * coordPlane.getYUnit());
+sf::Vector2f vecCoordToGraph(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
+    return sf::Vector2f(subWindow.getSize().x / 2 + x * coordPlane.getXUnit(),
+                        subWindow.getSize().y / 2 - y * coordPlane.getYUnit());
 }
 
-sf::Vector2f vecGraphToCoord(CoordinatePlane& coordPlane, double x, double y) {
-    return sf::Vector2f((x - WINDOW_LENGTH / 2) / coordPlane.getXUnit(), 
-                        (WINDOW_HEIGHT / 2 - y) / coordPlane.getYUnit());
+sf::Vector2f vecGraphToCoord(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
+    return sf::Vector2f((x - subWindow.getSize().x / 2) / coordPlane.getXUnit(), 
+                        (subWindow.getSize().y / 2 - y) / coordPlane.getYUnit());
 }
 
 void Vector::setX(double x) {
@@ -66,19 +66,22 @@ void Vector::setColor(sf::Color color) {
     this->color = color;
 }
 
-void Vector::drawArrowheads(sf::RenderWindow& window, CoordinatePlane& coordPlane) {
+void Vector::drawArrowheads(SubWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
     sf::VertexArray vecHead = sf::VertexArray(sf::Triangles, 3);
+    Vector startVec = Vector(xStart, yStart, this->color);
 
     // question
-    Vector leftArrow = !(*this) * 0.1 - (*this) * 0.1;  // TODO: move to constants
+    Vector leftArrow = (*this) - startVec;
+    leftArrow = !(leftArrow) * ARROW_SIZE_COEF - (leftArrow) * ARROW_SIZE_COEF;
     leftArrow = leftArrow + Vector(this->x, this->y); // parallel move of vector
 
-    Vector rightArrow = !(*this) * -0.1 - (*this) * 0.1;  // TODO: move to constants
+    Vector rightArrow = (*this) - startVec;
+    rightArrow = !(rightArrow) * -ARROW_SIZE_COEF - (rightArrow) * ARROW_SIZE_COEF;
     rightArrow = rightArrow + Vector(this->x, this->y);
 
-    vecHead[0].position = vecCoordToGraph(coordPlane, leftArrow.x, leftArrow.y);
-    vecHead[1].position = vecCoordToGraph(coordPlane, rightArrow.x, rightArrow.y);
-    vecHead[2].position = vecCoordToGraph(coordPlane, this->x, this->y);
+    vecHead[0].position = vecCoordToGraph(window, coordPlane, leftArrow.x, leftArrow.y);
+    vecHead[1].position = vecCoordToGraph(window, coordPlane, rightArrow.x, rightArrow.y);
+    vecHead[2].position = vecCoordToGraph(window, coordPlane, this->x, this->y);
 
     vecHead[0].color    = this->color;
     vecHead[1].color    = this->color;
@@ -87,11 +90,11 @@ void Vector::drawArrowheads(sf::RenderWindow& window, CoordinatePlane& coordPlan
     window.draw(vecHead);
 }
 
-void Vector::drawLine(sf::RenderWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
+void Vector::drawLine(SubWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
     sf::VertexArray lineObject(sf::LinesStrip, 2);
 
-    lineObject[0].position = vecCoordToGraph(coordPlane, xStart, yStart);
-    lineObject[1].position = vecCoordToGraph(coordPlane, this->x, this->y);;
+    lineObject[0].position = vecCoordToGraph(window, coordPlane, xStart, yStart);
+    lineObject[1].position = vecCoordToGraph(window, coordPlane, this->x, this->y);;
 
     lineObject[0].color = this->color;
     lineObject[1].color = this->color;
@@ -99,9 +102,9 @@ void Vector::drawLine(sf::RenderWindow& window, CoordinatePlane& coordPlane, dou
     window.draw(lineObject);
 }
 
-void Vector::draw(sf::RenderWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
+void Vector::draw(SubWindow& window, CoordinatePlane& coordPlane, double xStart, double yStart) {
     drawLine(window, coordPlane, xStart, yStart);
-    drawArrowheads(window, coordPlane);
+    drawArrowheads(window, coordPlane, xStart, yStart);
 }
 
 Vector operator+(const Vector& a, const Vector& b) {

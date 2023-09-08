@@ -1,20 +1,19 @@
-#include "vector.h"
+#include "graphLib.h"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(), "Chemical simulator", sf::Style::Fullscreen);
     window.setPosition(sf::Vector2i(0, 0));
 
-    CoordinatePlane coordPlane = CoordinatePlane();
+    SubWindow subWindow = SubWindow(20, 20, 300, 300);
+    CoordinatePlane coordPlane = CoordinatePlane(150, 150, 50, 50);
 
-    Vector rotatingVec = Vector(1, 0, sf::Color::Blue);
+    SubWindow subWindow2 = SubWindow(500, 500, 500, 500);
+    CoordinatePlane coordPlane2 = CoordinatePlane(500, 500, 100, 100);
 
-    Vector* mouseVec = nullptr;
+    Vector  rotatingVec = Vector(1, 2, sf::Color::Blue);
+    Vector* mouseVec1   = nullptr;
 
-    Vector staticVec1 = Vector(1, 2, sf::Color::Red);
-    Vector staticVec2 = Vector(2, 1, sf::Color::Green);
-    Vector result = staticVec1 >> 30;
-
-    std::cout << (staticVec1, staticVec2);
+    Vector test = Vector(1, 2, sf::Color::Yellow);
 
     while (window.isOpen())
     {
@@ -33,14 +32,15 @@ int main() {
                 break;
             case sf::Event::MouseButtonPressed: {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    if (mouseVec) delete mouseVec;
+                    if (mouseVec1) delete mouseVec1;
 
                     sf::Vector2i mouseGraphCoords = sf::Mouse::getPosition();
-                    sf::Vector2f mouseVecCoords   = vecGraphToCoord(coordPlane, 
+                    sf::Vector2f mouseVecCoords   = vecGraphToCoord(subWindow2,
+                                                                    coordPlane2, 
                                                                     mouseGraphCoords.x, 
                                                                     mouseGraphCoords.y);
 
-                    mouseVec = new Vector(mouseVecCoords.x, mouseVecCoords.y, sf::Color::Cyan);
+                    mouseVec1 = new Vector(mouseVecCoords.x, mouseVecCoords.y, sf::Color::Cyan);
                 }
             }
             default:
@@ -50,20 +50,29 @@ int main() {
 
         window.clear();
 
-        coordPlane.draw(window);
+        subWindow.clear();
+        subWindow2.clear();
+        coordPlane.draw(subWindow);
+        coordPlane2.draw(subWindow2);
         
         rotatingVec.rotate(0.01);
-        rotatingVec.draw(window, coordPlane);
+        rotatingVec.draw(subWindow, coordPlane);
+        rotatingVec.draw(subWindow2, coordPlane2);
 
-        if (mouseVec) mouseVec->draw(window, coordPlane);
+        if (mouseVec1) mouseVec1->draw(subWindow2, coordPlane2);
 
-        staticVec1.draw(window, coordPlane);
-        staticVec2.draw(window, coordPlane);
-        result.draw(window, coordPlane);
+        test.draw(subWindow2, coordPlane2, -1, 0);
+
+        // staticVec1.draw(window, coordPlane);
+        // staticVec2.draw(window, coordPlane);
+        // result.draw(window, coordPlane);
+
+        subWindow.displayOnWindow(window);
+        subWindow2.displayOnWindow(window);
 
         window.display();
     }
 
-    if (mouseVec) delete mouseVec;
+    if (mouseVec1) delete mouseVec1;
     return 0;
 }

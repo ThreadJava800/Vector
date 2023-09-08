@@ -7,12 +7,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-const int       WINDOW_LENGTH          = 1920;
-const int       WINDOW_HEIGHT          = 1080;
-const double    DEFAULT_UNIT           = 100;
 const float     UNIT_POINT_RAD         = 4;
+const double    ARROW_SIZE_COEF        = 0.1;
 const sf::Color DEFAULT_LINE_COLOR     = sf::Color::White;
 const sf::Color DEFAULT_UNIT_POINT_COL = sf::Color::Red;
+
+class SubWindow : public sf::RenderTexture {
+private:
+    double x0, y0;
+
+public:
+    SubWindow(double x0, double y0, double sizeX, double sizeY);
+
+    double getX0();
+    double getY0();
+
+    void displayOnWindow(sf::RenderWindow& window);
+};
 
 class CoordinatePlane {
 private:
@@ -20,7 +31,6 @@ private:
     double    xUnit  , yUnit;
 
 public:
-    CoordinatePlane();
     CoordinatePlane(double xOrigin, double yOrigin, double xUnit, double yUnit);
 
     double getXOrigin();
@@ -28,7 +38,7 @@ public:
     double getXUnit  ();
     double getYUnit  ();
 
-    void draw(sf::RenderWindow& window);
+    void draw(SubWindow& window);
 };
 
 class Vector {
@@ -36,8 +46,9 @@ private:
     double    x, y;
     sf::Color color;
 
-    void drawArrowheads(sf::RenderWindow& window, CoordinatePlane& coordPlane);
-    void drawLine      (sf::RenderWindow& window, CoordinatePlane& coordPlane,
+    void drawArrowheads(SubWindow& window, CoordinatePlane& coordPlane,
+                        double xStart, double yStart);
+    void drawLine      (SubWindow& window, CoordinatePlane& coordPlane,
                         double xStart, double yStart);
 
 public:
@@ -56,7 +67,7 @@ public:
     inline double len() const;
 
     void rotate(double degree);  // not radians
-    void draw(sf::RenderWindow& window, CoordinatePlane& coordPlane, 
+    void draw(SubWindow& window, CoordinatePlane& coordPlane, 
               double xStart = 0, double yStart = 0);
 
     friend Vector operator+  (const Vector& a, const Vector& b);
@@ -81,7 +92,7 @@ public:
     friend double operator,  (const Vector& a, const Vector& b);  // scalar mul
 };
 
-sf::Vector2f vecGraphToCoord(CoordinatePlane& coordPlane, double x, double y);
-sf::Vector2f vecCoordToGraph(CoordinatePlane& coordPlane, double x, double y);
+sf::Vector2f vecGraphToCoord(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y);
+sf::Vector2f vecCoordToGraph(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y);
 
 #endif

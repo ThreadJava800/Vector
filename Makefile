@@ -12,7 +12,7 @@ CFLAGS  = -D _DEBUG -ggdb3 -std=c++17 -O0 -w -Wall -Wextra -Weffc++ -Waggressive
 -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
 
-SOURCES=vec.cpp coordPlane.cpp main.cpp
+SOURCES=vec.cpp coordPlane.cpp subWindow.cpp main.cpp
 
 EXECUTABLE=patcher
 
