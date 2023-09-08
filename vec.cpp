@@ -48,8 +48,9 @@ sf::Vector2f vecCoordToGraph(SubWindow& subWindow, CoordinatePlane& coordPlane, 
 }
 
 sf::Vector2f vecGraphToCoord(SubWindow& subWindow, CoordinatePlane& coordPlane, double x, double y) {
-    return sf::Vector2f((x - subWindow.getSize().x / 2) / coordPlane.getXUnit(), 
-                        (subWindow.getSize().y / 2 - y) / coordPlane.getYUnit());
+    std::cout << subWindow.getX0() << ' ' << subWindow.getY0() << '\n';
+    return sf::Vector2f((x - subWindow.getSize().x / 2 - subWindow.getX0()) / coordPlane.getXUnit(), 
+                        (subWindow.getSize().y / 2 - y + subWindow.getY0()) / coordPlane.getYUnit());
 }
 
 void Vector::setX(double x) {
